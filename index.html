@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phaze AI — Instagram Content Strategy Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #222230;
+    --accent: #7c6af7;
+    --accent2: #f76a6a;
+    --accent3: #6af7c0;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --warn: #f7c26a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .noise {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    opacity: 0.4;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+    position: relative; z-index: 1;
+  }
+
+  /* HEADER */
+  .report-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 48px;
+    margin-bottom: 60px;
+  }
+
+  .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .meta-row {
+    display: flex; gap: 32px; flex-wrap: wrap;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 24px;
+  }
+
+  .meta-row span b { color: var(--text); }
+
+  /* VERDICT BANNER */
+  .verdict {
+    background: linear-gradient(135deg, #1a1025 0%, #0f1a1a 100%);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 60px;
+    font-size: 14.5px;
+    color: #d0d0e0;
+    line-height: 1.8;
+  }
+
+  .verdict strong { color: var(--accent2); }
+
+  /* SECTION HEADERS */
+  .section {
+    margin-bottom: 64px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 28px;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 32px 0 12px;
+    letter-spacing: 0.01em;
+  }
+
+  p { margin-bottom: 14px; color: #c8c8d8; }
+
+  /* STAT GRID */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 20px 16px;
+  }
+
+  .stat-card .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .stat-card .num.bad { color: var(--accent2); }
+  .stat-card .num.good { color: var(--accent3); }
+  .stat-card .num.warn { color: var(--warn); }
+
+  .stat-card .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* COMPARISON TABLE */
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 32px;
+    font-size: 13.5px;
+  }
+
+  .cmp-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .cmp-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1a1a24;
+    color: #c8c8d8;
+    vertical-align: top;
+  }
+
+  .cmp-table tr:last-child td { border-bottom: none; }
+
+  .cmp-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    width: 200px;
+  }
+
+  .cmp-table .me { color: var(--accent2); font-weight: 500; }
+  .cmp-table .them { color: var(--accent3); font-weight: 500; }
+
+  /* INSIGHT CARDS */
+  .insight {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+  }
+
+  .insight .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  .tag-bad { background: rgba(247,106,106,0.12); color: var(--accent2); }
+  .tag-good { background: rgba(106,247,192,0.1); color: var(--accent3); }
+  .tag-warn { background: rgba(247,194,106,0.1); color: var(--warn); }
+  .tag-info { background: rgba(124,106,247,0.12); color: var(--accent); }
+
+  .insight p { margin: 0; font-size: 14px; }
+  .insight strong { color: var(--text); }
+
+  /* BULLET LISTS */
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+  }
+
+  ul li {
+    padding: 8px 0 8px 20px;
+    position: relative;
+    color: #c0c0d0;
+    font-size: 14.5px;
+    border-bottom: 1px solid #14141e;
+  }
+
+  ul li:last-child { border-bottom: none; }
+
+  ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+  }
+
+  ul li b { color: var(--text); }
+  ul li.bad::before { color: var(--accent2); }
+  ul li.good::before { color: var(--accent3); }
+
+  /* FORMULA TEMPLATES */
+  .formula {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .formula::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .formula-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--border);
+    position: absolute;
+    right: 24px;
+    top: 16px;
+    line-height: 1;
+  }
+
+  .formula-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  .formula-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .formula-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .fb-hook { background: rgba(124,106,247,0.2); color: var(--accent); }
+  .fb-body { background: rgba(106,247,192,0.12); color: var(--accent3); }
+  .fb-cta  { background: rgba(247,194,106,0.15); color: var(--warn); }
+
+  .formula-text {
+    font-size: 13.5px;
+    color: #c8c8d8;
+    line-height: 1.6;
+  }
+
+  .formula-text em {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 12.5px;
+  }
+
+  /* CALENDAR */
+  .cal-week {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+  }
+
+  .cal-week-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .cal-day {
+    display: flex;
+    gap: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid #14141e;
+    align-items: flex-start;
+    font-size: 13.5px;
+  }
+
+  .cal-day:last-child { border-bottom: none; }
+
+  .cal-day-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    color: var(--muted);
+    width: 32px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .cal-content { color: #c8c8d8; }
+  .cal-content b { color: var(--text); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 56px 0;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: rgba(124,106,247,0.07);
+    border: 1px solid rgba(124,106,247,0.2);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: #c0c0da;
+  }
+
+  .callout strong { color: var(--accent); }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="report-header">
+    <div class="label">Content Intelligence Report · April 2026</div>
+    <h1>@shivam_talks23<br><span>vs. The Market</span></h1>
+    <p style="color:var(--muted); font-size:14px; max-width:560px;">A data-driven breakdown of your Instagram Reels performance against 10 competitors, 120 analyzed posts, and what you need to do next.</p>
+    <div class="meta-row">
+      <span>My reels: <b>16</b></span>
+      <span>Competitor reels: <b>120</b></span>
+      <span>Niche: <b>Emotional / Relatable</b></span>
+      <span>Account: <b>shivam_talks23</b></span>
+    </div>
+  </div>
+
+  <!-- UPFRONT VERDICT -->
+  <div class="verdict">
+    <strong>The honest verdict:</strong> Your content is thematically solid — you're in the right niche with the right emotional register. But you're a very new account posting at a very low volume, and your hooks are the weakest part of what you do. Your comment-to-like ratio (3.5%) is actually <em>better</em> than top competitors (1.3%), which means people who see your content engage deeply. The problem is reach and stopping power — not resonance. Fix the hook, post more, and you have a real path forward.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- STEP 1: MY ANALYSIS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label">Step 01</div>
+    <h2>My Content — The Honest Breakdown</h2>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="num warn">352</div>
+        <div class="stat-label">My Avg Likes</div>
+      </div>
+      <div class="stat-card">
+        <div class="num warn">7.4</div>
+        <div class="stat-label">My Avg Comments</div>
+      </div>
+      <div class="stat-card">
+        <div class="num good">3.5%</div>
+        <div class="stat-label">Comment / Like Ratio</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">16</div>
+        <div class="stat-label">Total Reels Posted</div>
+      </div>
+    </div>
+
+    <h3>Top Performers — What Worked and Why</h3>
+
+    <div class="insight">
+      <div class="tag tag-good">#1 — 1,378 Likes</div>
+      <p><b>"Choose your people wisely ❤️"</b> — This is your best post by a massive margin (4x your next best). It works because it makes a <b>bold, declarative statement</b> that people reflexively agree with and want to share with specific friends. It also hits the friendship loyalty theme — one of the highest-performing sub-topics across the entire competitor dataset. The short, punchy caption with no over-explanation is the right call here.</p>
+    </div>
+
+    <div class="insight">
+      <div class="tag tag-good">#2 — 350 Likes</div>
+      <p><b>"Still Alive ❤️ @maisamayhoon"</b> — Piggybacking on @maisamayhoon (likely a trending audio or creator) gave you an algorithmic push. The caption is minimal, the hook leans on a cultural reference, and it performed 2.4x your average. This tells you that <b>trend-jacking with the right cultural reference</b> works even with a small audience.</p>
+    </div>
+
+    <div class="insight">
+      <div class="tag tag-good">#3 — 187 Likes</div>
+      <p><b>"Behind my silence there is a story ❤️"</b> — The hook is an identity-claim structure ("there is a story behind X"). It implies depth and mystery. People who have been misunderstood save this. Strong hashtag set targeting overthinking/communication audiences helped the distribution.</p>
+    </div>
+
+    <h3>Bottom Performers — What's Killing Reach</h3>
+
+    <div class="insight">
+      <div class="tag tag-bad">116 Likes — Lowest</div>
+      <p><b>"This is what peace looks like ❤️"</b> — Vague hook. It doesn't make a specific claim or create a gap the viewer needs to close. "Peace" is a saturated concept with no tension. Credit to @muzsayys in the caption also signals reposted content, which the algorithm generally suppresses.</p>
+    </div>
+
+    <div class="insight">
+      <div class="tag tag-bad">137 Likes — Long-form caption that flopped</div>
+      <p><b>"Letting someone go isn't just about losing them…"</b> — Your most written caption. Lots of effort, lowest payoff. The body is good writing — but it's functioning as a caption when it should be the <b>script</b> of the reel itself. Nobody reads multi-paragraph captions before watching. The reel hook has to earn that read.</p>
+    </div>
+
+    <div class="insight">
+      <div class="tag tag-bad">0 Comments — Complete miss</div>
+      <p><b>"Watch this ❤️"</b> — The only post with zero engagement. "Watch this" is the single worst hook you can write. It tells the viewer nothing about why they should stop scrolling. This is a generic CTA masquerading as a hook, and the algorithm buried it.</p>
+    </div>
+
+    <h3>The Hidden Signal — Your Comment-Heavy Posts</h3>
+    <p>Your posts with hidden likes (older, pre-scrape) show comments ranging from 4 to 17. The standout is <b>"They just needed you, not advice"</b> with 17 comments — your highest comment count of all posts. This is a <b>classic insight hook</b> that reframes how people see emotional support. It's controversial enough to spark debate, specific enough to feel true. This type should become a core format for you.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- STEP 2: GAP ANALYSIS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label">Step 02</div>
+    <h2>The Gap Analysis — Where You're Losing Ground</h2>
+
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>You (@shivam_talks23)</th>
+          <th>Top Competitors (avg)</th>
+          <th>Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Avg Likes</td>
+          <td class="me">352</td>
+          <td class="them">41,075</td>
+          <td>117× behind</td>
+        </tr>
+        <tr>
+          <td>Avg Comments</td>
+          <td class="me">7.4</td>
+          <td class="them">473</td>
+          <td>64× behind</td>
+        </tr>
+        <tr>
+          <td>Comment/Like %</td>
+          <td class="me">3.52%</td>
+          <td class="them">1.29%</td>
+          <td><span style="color:var(--accent3)">You win this</span></td>
+        </tr>
+        <tr>
+          <td>Peak single post</td>
+          <td class="me">1,378</td>
+          <td class="them">409,185</td>
+          <td>297× behind</td>
+        </tr>
+        <tr>
+          <td>Posts in dataset</td>
+          <td class="me">16</td>
+          <td class="them">~20 each</td>
+          <td>Consistent posting</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>What the comment ratio actually tells you:</strong> Your 3.52% comment-to-like ratio is nearly 3× better than competitors. That means your content triggers real emotional reactions when people actually stop to watch. The problem is they're not stopping. This is a <b>hook and reach problem</b>, not a content quality problem.
+    </div>
+
+    <h3>What Top Creators Are Doing That You're Not</h3>
+
+    <ul>
+      <li class="bad"><b>The Direct Address Hook:</b> @ankush.sayss's biggest posts open with direct questions — "Would you date someone like yourself?" and "A little reassurance can fix things — what do you think it is?" These pull the viewer into the content as a participant, not a spectator. Your hooks are mostly statements about emotions, not invitations to reflect.</li>
+
+      <li class="bad"><b>The Viral Statement Hook:</b> @nikhilspeaks1's 110k-like post has the caption "Who're you in love if you're not so obsessed…" — one incomplete sentence that creates a gap the viewer has to resolve. No context, no explanation, just a statement that demands a reaction. You don't have a single hook that does this.</li>
+
+      <li class="bad"><b>Serial / Day-Counting Content:</b> @ankush.sayss runs a "Day X/30" series. Three of his top 6 posts are from this series. The series format creates <b>compulsive return visits</b> — viewers who liked Day 14 come back for Day 15. You have zero serialized content.</li>
+
+      <li class="bad"><b>Age/Demographic Targeting:</b> @samarthwadhwa7's "24-28 year olds hear me out" got 43,942 likes. Calling out a specific group ("24-28 year olds," "corporate workers," "people who overthink") creates instant identity recognition. Your captions almost never call out a specific group.</li>
+
+      <li class="bad"><b>Controversy + Commentary:</b> @samarthwadhwa7 blends emotional content with light social commentary ("You can cancel a comedian, not the truth" — 85k likes). This is a format you're completely absent from. It generates comments because people take sides.</li>
+
+      <li class="good"><b>What you DO better:</b> Your hashtag strategy is actually more sophisticated than several mid-tier competitors. Your captions use keyword stuffing correctly (comma-separated after the bracket block). Keep this.</li>
+    </ul>
+
+    <h3>The White Space — Underserved Topics in the Competitor Data</h3>
+
+    <ul>
+      <li><b>Anxiety & overthinking with actionable framing:</b> Every creator posts about anxiety. Nobody frames it with a concrete "here's what this really is" insight. The post "They just needed you, not advice" does this. There are maybe 2-3 posts like this across 120 reels — it's wide open.</li>
+      <li><b>The "growing up" emotional arc:</b> "Birthdays are not same anymore" and "The last good day theory" — you posted both of these. They got decent comments but no competitor in this dataset is running hard on this theme. It's yours to own.</li>
+      <li><b>Platonic relationships / friendship grief:</b> 80% of competitor content is romantic. "Choose your people wisely" — your #1 post — is about friendship loyalty. The competitor dataset has maybe 5-6 posts in this space across 120 reels. Massive gap.</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- STEP 3: WINNING FORMULAS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label">Step 03a</div>
+    <h2>5 Winning Formula Templates</h2>
+    <p style="margin-bottom:28px;">Every template below is derived directly from what worked in both datasets. Not theory — patterns from actual high-performing posts.</p>
+
+    <div class="formula">
+      <div class="formula-num">01</div>
+      <div class="formula-title">The Incomplete Statement</div>
+      <div class="formula-row">
+        <span class="formula-badge fb-hook">Hook</span>
+        <span class="formula-text">One sentence, no period, no explanation. Leaves a gap the viewer's brain must resolve. <em>e.g. "Who're you in love if you're not so obsessed…" / "At least one of us happy now…"</em></span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-body">Body</span>
+        <span class="formula-text">Slow reveal of the emotion or story behind the statement. 30-45 seconds. Voiceover or text on screen. No explanation in the first 5 seconds — earn it.</span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-cta">CTA</span>
+        <span class="formula-text">Ask a direct binary question. "Have you felt this?" or "Send this to someone who needs to hear it." Never "follow for more."</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">02</div>
+      <div class="formula-title">The Reframe Hook</div>
+      <div class="formula-row">
+        <span class="formula-badge fb-hook">Hook</span>
+        <span class="formula-text">Challenges a belief the audience holds. Uses "not just" or "everyone talks about X but nobody talks about Y." <em>e.g. "Letting go isn't just about losing them — you lose a version of yourself too." / "They just needed you, not advice."</em></span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-body">Body</span>
+        <span class="formula-text">3-4 specific, concrete observations that prove the reframe. Not vague. "The habits you formed. The inside jokes that have nowhere to go. The version of you that only existed with them."</span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-cta">CTA</span>
+        <span class="formula-text">Debate prompt. "Agree or disagree?" / "Am I wrong?" High comment trigger.</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">03</div>
+      <div class="formula-title">The Group Call-Out</div>
+      <div class="formula-row">
+        <span class="formula-badge fb-hook">Hook</span>
+        <span class="formula-text">Name a specific type of person in the first 2 seconds. <em>e.g. "This is for people who love too deeply." / "If you've ever been the one who cares more — this is for you." / "People who overthink at 3am, hear me out."</em></span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-body">Body</span>
+        <span class="formula-text">Validate what that group feels. Use second person ("you") throughout. Make it feel like you're describing them, not at them. 20-35 seconds.</span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-cta">CTA</span>
+        <span class="formula-text">"Tag someone who needs this." / "Send this to someone who gets it." Forces shares — the highest-value engagement signal for reach.</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">04</div>
+      <div class="formula-title">The Bold Declarative</div>
+      <div class="formula-row">
+        <span class="formula-badge fb-hook">Hook</span>
+        <span class="formula-text">A single sentence that is an opinion stated as fact. Short, confident, no hedging. <em>e.g. "Choose your people wisely." / "Just STAY." / "Ego kills everything."</em> — works best with 1-3 words or one clean clause.</span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-body">Body</span>
+        <span class="formula-text">Emotional evidence for the statement. Story-driven or poetic. Music-heavy. Under 30 seconds. Let the visuals and audio do the heavy lifting here — minimal text.</span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-cta">CTA</span>
+        <span class="formula-text">No question. Just: "Send to someone who needs to hear this." The declarative nature already creates the share impulse.</span>
+      </div>
+    </div>
+
+    <div class="formula">
+      <div class="formula-num">05</div>
+      <div class="formula-title">The Series / Streak Format</div>
+      <div class="formula-row">
+        <span class="formula-badge fb-hook">Hook</span>
+        <span class="formula-text">Open with the series number. <em>"Day 1/21 — [bold emotional statement]"</em> or <em>"21 days of unlearning: Day 1."</em> The number creates commitment device psychology — viewers want to see where it goes.</span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-body">Body</span>
+        <span class="formula-text">Each episode covers one specific emotion, lesson, or story. Consistent format, consistent music, consistent visual style. The reliability IS the content.</span>
+      </div>
+      <div class="formula-row">
+        <span class="formula-badge fb-cta">CTA</span>
+        <span class="formula-text">"Follow so you don't miss Day 2." Only time a follow CTA is justified — because there's a reason to follow, not just a generic ask.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- STEP 3B: 30-DAY PLAN -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label">Step 03b</div>
+    <h2>30-Day Content Strategy</h2>
+    <p>Post frequency: <b>5 reels per week minimum.</b> @ankush.sayss is on a literal 30-day challenge. Volume creates algorithmic familiarity. Your 16-reel total so far is too sparse to build momentum.</p>
+
+    <div class="cal-week">
+      <div class="cal-week-label">Week 1 — Establish Pillars</div>
+      <div class="cal-day">
+        <div class="cal-day-name">MON</div>
+        <div class="cal-content"><b>Bold Declarative</b> — Launch a 21-day series. "Day 1/21 — [statement about friendship]." Your #1 post was friendship. Start there.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">WED</div>
+        <div class="cal-content"><b>Reframe Hook</b> — Pick a universal emotion (loneliness, growing up) and reframe it. "Everyone talks about missing people. Nobody talks about missing who you were with them."</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">FRI</div>
+        <div class="cal-content"><b>Group Call-Out</b> — Target overthinkers. "If your brain never shuts off at night, this one's for you." Broad group, high identification.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">SAT</div>
+        <div class="cal-content"><b>Trend-jack</b> — Use a trending audio (same strategy as "Still Alive"). Keep caption minimal. Let the sound do the work.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">SUN</div>
+        <div class="cal-content"><b>Day 2/21 (Series)</b> — Second installment. Consistent format, different emotion.</div>
+      </div>
+    </div>
+
+    <div class="cal-week">
+      <div class="cal-week-label">Week 2 — Probe the White Space</div>
+      <div class="cal-day">
+        <div class="cal-day-name">MON</div>
+        <div class="cal-content"><b>Day 3/21</b> — Series continues. Test "growing up" emotion: "Birthdays hit different when you realize no one is throwing you a party anymore."</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">WED</div>
+        <div class="cal-content"><b>Friendship grief angle</b> — "Some friendships don't end in a fight. They just… quietly stop." This is your white space. Own it.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">FRI</div>
+        <div class="cal-content"><b>Incomplete Statement hook test</b> — One sentence, no ending. See if this format pulls better watch-time for your audience.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">SAT</div>
+        <div class="cal-content"><b>Repurpose your best</b> — Re-edit "Choose your people wisely" with a stronger visual or a different audio. Your best concept deserves more than one attempt.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">SUN</div>
+        <div class="cal-content"><b>Day 4/21</b> — Series. Consider: anxiety, silence, forgiveness.</div>
+      </div>
+    </div>
+
+    <div class="cal-week">
+      <div class="cal-week-label">Week 3 — Double Down on Data</div>
+      <div class="cal-day">
+        <div class="cal-day-name">ALL WEEK</div>
+        <div class="cal-content">By now you have 2 weeks of your own data. Look at which of Weeks 1-2 performed best. <b>Make 3 more posts in that exact format.</b> Don't rotate away from what's working to "try something new." Competitors who break out do it by repeating a winning format 8-10 times, not 2.</div>
+      </div>
+    </div>
+
+    <div class="cal-week">
+      <div class="cal-week-label">Week 4 — Scale and Consolidate</div>
+      <div class="cal-day">
+        <div class="cal-day-name">MON</div>
+        <div class="cal-content"><b>Day 15/21</b> — Midpoint of the series. Use this one to explicitly acknowledge that people have been following along. Builds community signal.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">WED</div>
+        <div class="cal-content"><b>Controversy / opinion post</b> — Take a mild stance. "Staying silent to keep the peace is not maturity. It's fear." Designed to get comments from both sides.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">FRI</div>
+        <div class="cal-content"><b>Your best comment-bait yet</b> — Use everything you've learned. Group call-out hook, reframe body, debate CTA.</div>
+      </div>
+      <div class="cal-day">
+        <div class="cal-day-name">WEEKEND</div>
+        <div class="cal-content"><b>2 trending audio pieces</b> — Keep the algorithm happy. Minimum effort, maximum distribution.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- HOOK + CTA FIXES -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label">Step 03c</div>
+    <h2>Exact Hook & CTA Fixes</h2>
+
+    <h3>Your Current Hooks — Rated Honestly</h3>
+
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Your Hook</th><th>Problem</th><th>Better Version</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"Watch this ❤️"</td>
+          <td style="color:var(--accent2)">Zero information. No reason to stop.</td>
+          <td style="color:var(--accent3)">Delete this phrasing permanently from your vocabulary.</td>
+        </tr>
+        <tr>
+          <td>"This is what peace looks like"</td>
+          <td style="color:var(--accent2)">Vague. Everyone says this. No gap created.</td>
+          <td style="color:var(--accent3)">"Nobody tells you that peace feels boring at first." — Reframe, creates tension.</td>
+        </tr>
+        <tr>
+          <td>"Ego kills everything"</td>
+          <td style="color:var(--accent2)">Statement without specificity. Forgettable.</td>
+          <td style="color:var(--accent3)">"Ego killed a friendship I thought would last forever." — Personal, specific, relatable.</td>
+        </tr>
+        <tr>
+          <td>"Strangers again ❤️‍🩹"</td>
+          <td style="color:var(--accent2)">Good topic, weak execution. Too brief without buildup.</td>
+          <td style="color:var(--accent3)">"We used to be everything. Now we don't even make eye contact." — Narrative tension.</td>
+        </tr>
+        <tr>
+          <td>"Behind my silence there is a story"</td>
+          <td style="color:var(--accent2)">Good structure. One of your stronger hooks.</td>
+          <td style="color:var(--accent3)">Keep this format. Expand it: "Behind my silence is a story I'm still trying to understand."</td>
+        </tr>
+        <tr>
+          <td>"Choose your people wisely"</td>
+          <td style="color:var(--accent2)">Your best hook. Clean, declarative, shareable.</td>
+          <td style="color:var(--accent3)">This is the template. Replicate the energy in everything else.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>CTA Fixes — What to Say Instead</h3>
+
+    <ul>
+      <li class="bad">Stop saying: <b>"Follow for more"</b> — empty, no reason given, algorithm ignores it</li>
+      <li class="bad">Stop saying: <b>"Share if you relate"</b> — too passive, too generic</li>
+      <li class="bad">Stop putting the CTA only in the caption — most viewers never read it</li>
+      <li class="good">Use: <b>"Send this to someone who needs to hear it"</b> — forces share action, personal</li>
+      <li class="good">Use: <b>"Tag the person you're thinking about right now"</b> — creates comments flood</li>
+      <li class="good">Use: <b>"Agree or disagree? Let me know below"</b> — comment trigger, low barrier</li>
+      <li class="good">Use: <b>"Follow so you don't miss Day X"</b> — only when running a series</li>
+      <li>Say the CTA <b>in the video itself</b> (voiceover or text overlay in last 3 seconds) — not just the caption</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FINAL SUMMARY -->
+  <div class="section">
+    <div class="section-label">Summary</div>
+    <h2>The 3 Things That Will Actually Move The Needle</h2>
+
+    <div class="insight">
+      <div class="tag tag-info">Priority 1</div>
+      <p><b>Fix your hooks before anything else.</b> Your content resonates when people watch it — your comment ratio proves it. The block is in the first 2 seconds. Adopt the Incomplete Statement or Group Call-Out format for your next 10 posts and measure watch-time change.</p>
+    </div>
+
+    <div class="insight">
+      <div class="tag tag-info">Priority 2</div>
+      <p><b>Start a series this week.</b> @ankush.sayss built three 100k+ posts off a 30-day challenge. You have the voice for it. "21 days of things nobody talks about" or "Day X/21 — [emotional reframe]." The series format compounds — each new episode pulls viewers back to old episodes.</p>
+    </div>
+
+    <div class="insight">
+      <div class="tag tag-info">Priority 3</div>
+      <p><b>Own the friendship grief and "growing up" lanes.</b> This is your white space. Your top post was in it, your comment-heavy posts were in it, and competitors aren't there. Post 3 reels in this niche in the next 2 weeks and see what happens. If they pop, that's your brand.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>@shivam_talks23 · Instagram Content Report</span>
+    <span>Generated April 2026 · Data: 136 reels across 11 accounts</span>
+  </div>
+
+</div>
+</body>
+</html>
